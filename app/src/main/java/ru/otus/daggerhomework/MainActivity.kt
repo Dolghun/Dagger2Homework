@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity(), DependenciesProvider<MainActivityCompo
     override fun onCreate(savedInstanceState: Bundle?) {
         val dependenciesProvider = application as? DependenciesProvider<*>
             ?: throw ClassCastException(
-                "App must implement `DependenciesProvider` of `MainActivityDependencies`"
+                "Exception"
             )
         activityComponent = DaggerMainActivityComponent.factory()
             .create(dependenciesProvider.getDependencies() as MainActivityDependencies, this)
