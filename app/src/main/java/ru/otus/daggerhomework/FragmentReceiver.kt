@@ -26,7 +26,7 @@ class FragmentReceiver : Fragment() {
         super.onAttach(context)
         val dependenciesProvider = activity as? DependenciesProvider<*>
             ?: throw ClassCastException(
-                "Activity must implement `DependenciesProvider` of `FragmentReceiverDependencies`"
+                "Exception`"
             )
         DaggerFragmentReceiverComponent.builder()
             .fragmentReceiverDependencies(dependenciesProvider.getDependencies() as FragmentReceiverDependencies?)
