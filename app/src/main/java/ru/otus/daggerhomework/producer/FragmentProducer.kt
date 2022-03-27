@@ -1,4 +1,4 @@
-package ru.otus.daggerhomework
+package ru.otus.daggerhomework.producer
 
 import android.content.Context
 import android.os.Bundle
@@ -8,22 +8,28 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import ru.otus.daggerhomework.DependenciesProvider
+import ru.otus.daggerhomework.MainActivity
+import ru.otus.daggerhomework.R
 import javax.inject.Inject
 
+
 class FragmentProducer : Fragment() {
-    
+
     @Inject
-    lateinit var viewModelFactory: ViewModelProducerFactory
-    private val viewModel: ViewModelProducer by viewModels { viewModelFactory }
-    
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: ProducerViewModel by viewModels { viewModelFactory }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        val dependenciesProvider = activity as? DependenciesProvider<FragmentProducerDependencies>
+        val dependenciesProvider = activity as? DependenciesProvider<*>
             ?: throw ClassCastException(
                 "Activity must implement `DependenciesProvider` of `FragmentProducerDependencies`"
             )
         DaggerFragmentProducerComponent.builder()
-            .fragmentProducerDependencies(dependenciesProvider.getDependencies())
+            .mainActivityComponent((requireActivity() as MainActivity).activityComponent)
             .build()
             .inject(this)
     }

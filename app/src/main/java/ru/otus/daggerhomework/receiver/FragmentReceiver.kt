@@ -1,4 +1,4 @@
-package ru.otus.daggerhomework
+package ru.otus.daggerhomework.receiver
 
 import android.content.Context
 import android.os.Bundle
@@ -9,37 +9,30 @@ import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import ru.otus.daggerhomework.DependenciesProvider
+import ru.otus.daggerhomework.MainActivity
+import ru.otus.daggerhomework.R
 import javax.inject.Inject
 
-class FragmentReceiver : Fragment() {
+class FragmentReceiver : Fragment(R.layout.fragment_b) {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelReceiverFactory
-    private val viewModel: ViewModelReceiver by viewModels { viewModelFactory }
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: ReceiverViewModel by viewModels { viewModelFactory }
+
     private var frame: View? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        val dependenciesProvider = activity as? DependenciesProvider<*>
-            ?: throw ClassCastException(
-                "Exception`"
-            )
         DaggerFragmentReceiverComponent.builder()
-            .fragmentReceiverDependencies(dependenciesProvider.getDependencies() as FragmentReceiverDependencies?)
+            .mainActivityComponent((requireActivity() as MainActivity).activityComponent)
             .build()
             .inject(this)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_b, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

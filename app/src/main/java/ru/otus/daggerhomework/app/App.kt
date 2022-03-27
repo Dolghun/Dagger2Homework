@@ -1,16 +1,13 @@
-package ru.otus.daggerhomework
+package ru.otus.daggerhomework.app
 
 import android.app.Application
 
-class App : Application(), DependenciesProvider<MainActivityDependencies> {
-    
+class App : Application() {
+
     lateinit var appComponent: ApplicationComponent
-    
+
     override fun onCreate() {
         super.onCreate()
         appComponent = DaggerApplicationComponent.factory().create(this)
     }
-    
-    override fun getDependencies(): MainActivityDependencies = appComponent
-    
 }
